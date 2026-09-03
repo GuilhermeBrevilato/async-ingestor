@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from ingestor.models import FonteAPI
 
 MAX_CONCORRENCIA = 3
@@ -16,7 +18,11 @@ STATUS_RETRY = {
     502,
     503,
     504,
-}
+} 
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BRONZE_DIR = BASE_DIR / "data" / "bronze"
+BRONZE_DIR.mkdir(parents=True, exist_ok=True)
 
 FONTES = [
     FonteAPI(
@@ -25,7 +31,7 @@ FONTES = [
             "https://brasilapi.com.br/"
             "api/banks/v1"
         ),
-        arquivo = "data/bronze/brasilapi_bancos.json",
+        arquivo = str(BRONZE_DIR /"brasilapi_bancos.json"),
     ),
 
     FonteAPI(
@@ -34,7 +40,7 @@ FONTES = [
             "https://brasilapi.com.br/api/"
             "feriados/v1/2026"
         ),
-        arquivo = "data/bronze/brasilapi_feriados.json",
+        arquivo = str(BRONZE_DIR /"brasilapi_feriados.json"),
     ),
 
     FonteAPI(
@@ -43,7 +49,7 @@ FONTES = [
             "https://servicodados.ibge.gov.br/api/"
             "v1/localidades/estados"
         ),
-        arquivo = "data/bronze/ibge_estados.json",
+        arquivo = str(BRONZE_DIR /"ibge_estados.json"),
     ),
 
     FonteAPI(
@@ -52,7 +58,7 @@ FONTES = [
             "https://servicodados.ibge.gov.br/api/v1/"
             "localidades/estados/SP/municipios"
         ),
-        arquivo = "data/bronze/ibge_municipios_sp.json",
+        arquivo = str(BRONZE_DIR /"ibge_municipios_sp.json"),
     ),
 
     FonteAPI(
@@ -63,6 +69,6 @@ FONTES = [
             "&longitude=-46.63"
             "&current=temperature_2m"
         ),
-        arquivo = "data/bronze/open_meteo_sp.json",
+        arquivo = str(BRONZE_DIR /"open_meteo_sp.json"),
     ),
 ]
