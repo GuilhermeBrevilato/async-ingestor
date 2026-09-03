@@ -1,0 +1,18 @@
+# Ambiente virtual — bibliotecas instaladas, não é código nosso
+.venv/
+venv/
+
+# Cache que o Python gera automaticamente
+__pycache__/
+*.py[cod]
+
+# Segredos — nunca versionar
+.env
+
+# Arquivos de IDE e do sistema operacional
+.vscode/
+.idea/
+.DS_Store
+
+# Dados brutos gerados pelo pipeline
+data/bronze/*.json
