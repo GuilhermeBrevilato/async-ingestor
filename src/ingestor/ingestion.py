@@ -19,28 +19,26 @@ from ingestor.models import (
 )
 from ingestor.storage import salvar_json
 
-logger = logging.getLogger(
-    __name__
-)
+logger = logging.getLogger(__name__)
+
 
 def status_permite_retry(
-        status: int,
+    status: int,
 ) -> bool:
     return status in STATUS_RETRY
 
 
 async def extrair_com_retry(
-        client: httpx.AsyncClient,
-        semaforo: asyncio.Semaphore,
-        tracker: ConcorrenciaTracker,
-        fonte: FonteAPI,
+    client: httpx.AsyncClient,
+    semaforo: asyncio.Semaphore,
+    tracker: ConcorrenciaTracker,
+    fonte: FonteAPI,
 ) -> dict | list:
-    total_tentativas = len(BACKOFFS) + 1 
+    total_tentativas = len(BACKOFFS) + 1
 
     ultimo_erro: Exception | None = None
 
     for tentativa in range(total_tentativas):
-
         numero_tentativa = tentativa + 1
 
         try:
@@ -53,7 +51,7 @@ async def extrair_com_retry(
                     tracker.ativos,
                     tracker.pico,
                 )
-                try :
+                try:
                     return await consultar_api(client, fonte)
                 finally:
                     tracker.sair()
@@ -73,7 +71,6 @@ async def extrair_com_retry(
             httpx.TimeoutException,
             httpx.NetworkError,
         ) as erro:
-
             ultimo_erro = erro
 
         except httpx.RequestError as erro:
@@ -82,9 +79,7 @@ async def extrair_com_retry(
                 source=fonte.nome,
             ) from erro
 
-        ultima_tentativa = (
-            tentativa == total_tentativas - 1
-        )
+        ultima_tentativa = tentativa == total_tentativas - 1
 
         if ultima_tentativa:
             break
@@ -112,6 +107,7 @@ async def extrair_com_retry(
         f"Falha após {total_tentativas} tentativas",
         source=fonte.nome,
     ) from ultimo_erro
+
 
 async def processar_fonte(
     client: httpx.AsyncClient,
@@ -161,13 +157,14 @@ async def processar_fonte(
             fonte.nome,
         )
 
-        raise 
+        raise
+
 
 async def executar_sequencial(
-        client: httpx.AsyncClient,
-        semaforo: asyncio.Semaphore,
-        tracker: ConcorrenciaTracker,
-        fontes: list[FonteAPI],
+    client: httpx.AsyncClient,
+    semaforo: asyncio.Semaphore,
+    tracker: ConcorrenciaTracker,
+    fontes: list[FonteAPI],
 ) -> list[ResultadoIngestao]:
     resultados = []
 
@@ -183,11 +180,12 @@ async def executar_sequencial(
 
     return resultados
 
+
 async def executar_assincrono(
-        client: httpx.AsyncClient,
-        semaforo: asyncio.Semaphore,
-        tracker: ConcorrenciaTracker,
-        fontes: list[FonteAPI],
+    client: httpx.AsyncClient,
+    semaforo: asyncio.Semaphore,
+    tracker: ConcorrenciaTracker,
+    fontes: list[FonteAPI],
 ) -> list[ResultadoIngestao]:
     coroutines = [
         processar_fonte(
@@ -199,6 +197,4 @@ async def executar_assincrono(
         for fonte in fontes
     ]
 
-    return await asyncio.gather(
-        *coroutines
-    )
+    return await asyncio.gather(*coroutines)

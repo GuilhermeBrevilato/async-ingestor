@@ -10,4 +10,3 @@ class ExtractionError(DataPipelineError):
 
 class StorageError(DataPipelineError):
     pass
-

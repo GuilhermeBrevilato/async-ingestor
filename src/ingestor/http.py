@@ -4,9 +4,7 @@ import httpx
 
 from ingestor.models import FonteAPI
 
-logger = logging.getLogger(
-    __name__
-)
+logger = logging.getLogger(__name__)
 
 
 async def consultar_api(

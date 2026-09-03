@@ -5,16 +5,10 @@ import aiofiles
 
 from ingestor.exceptions import StorageError
 
-logger = logging.getLogger(
-    __name__
-)
+logger = logging.getLogger(__name__)
 
-async def salvar_json(
-    caminho: str,
-    dados: dict | list,
-    *,
-    fonte: str
-) -> None:
+
+async def salvar_json(caminho: str, dados: dict | list, *, fonte: str) -> None:
     try:
         conteudo = json.dumps(
             dados,
@@ -29,14 +23,11 @@ async def salvar_json(
 
     try:
         async with aiofiles.open(
-            caminho, 
-            'w', 
-            encoding='utf-8',
-            ) as arquivo:
-
-            await arquivo.write(
-                conteudo
-            )
+            caminho,
+            "w",
+            encoding="utf-8",
+        ) as arquivo:
+            await arquivo.write(conteudo)
     except OSError as erro:
         raise StorageError(
             f"Falha ao persistir {caminho}",

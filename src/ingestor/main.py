@@ -20,16 +20,12 @@ from ingestor.models import (
 
 logging.basicConfig(
     level=logging.INFO,
-    format=(
-        "%(asctime)s | "
-        "%(levelname)s | "
-        "%(name)s | "
-        "%(message)s"
-    ),
+    format=("%(asctime)s | %(levelname)s | %(name)s | %(message)s"),
     datefmt="%H:%M:%S",
 )
 
-logger = logging.getLogger(__name__) 
+logger = logging.getLogger(__name__)
+
 
 def resumir(
     modo: str,
@@ -37,10 +33,7 @@ def resumir(
     duracao: float,
     tracker: ConcorrenciaTracker,
 ) -> None:
-    sucessos = sum(
-        resultado.sucesso
-        for resultado in resultados
-    )
+    sucessos = sum(resultado.sucesso for resultado in resultados)
 
     falhas = len(resultados) - sucessos
 
@@ -52,6 +45,7 @@ def resumir(
         falhas,
         tracker.pico,
     )
+
 
 async def testar_sequencial() -> tuple[
     list[ResultadoIngestao],
